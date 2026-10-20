@@ -1,0 +1,23 @@
+EVIDÊNCIA — TESTE HTTP TRACE
+Projeto: CyberLab
+Aplicação: OWASP Juice Shop local
+Data do teste: 20/10/2026
+Destino: 192.168.115.5:3000
+Endpoint: /rest/products/search?q=apple
+Método HTTP: TRACE
+
+RESULTADO OBSERVADO
+Status HTTP: 500 Internal Server Error
+Content-Type: text/html; charset=utf-8
+Mensagem: Error: Unexpected path: /rest/products/search?q=apple
+
+ANÁLISE
+A resposta incluiu caminhos de arquivos e detalhes do stack trace da aplicação.
+Isso indica exposição de detalhes internos na página de erro observada.
+Não foi confirmada reflexão da solicitação HTTP nem uma vulnerabilidade explorável.
+
+RECOMENDAÇÃO
+Investigar o tratamento de erros e evitar a exposição de stack traces em ambientes de produção.
+
+ESCOPO
+Teste realizado em ambiente local, controlado e autorizado.
