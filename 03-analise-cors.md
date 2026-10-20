@@ -1,54 +1,71 @@
- Analise Defensiva de CORS-OWASP Juice Shop
+# Análise Defensiva de CORS — OWASP Juice Shop
 
-1.Objetivo
-Investigar os cabecalhos HTTP relacionados a CORS em um aplicacao OWASP Juice Shop executada em laboratorio local.
+## 1. Objetivo
 
-2.Ambiente
-Sistema de analise:Kali Linux
-Aplicacao-alvo:OWASP Juice Shop
-Endereco Local:http://192.168.115.5:3000
-Ferramentas: Firefox Developer Tools (Network)
+Investigar os cabeçalhos HTTP relacionados ao Cross-Origin Resource Sharing (CORS) em uma instância do OWASP Juice Shop executada em laboratório local.
 
-3.Endpoiint analisado
-Metodo: GET
-Caminho: /api/Challenges/?name=Score
-Recurso:informacoes do desafio Score Board
+## 2. Ambiente
 
-4.Evidencias observadas
-Access-Control-Allow-Origin: *
-Access-COntrol-Allow-Credentials:nao identificado
-Vary: Accept-Encoding
-Status HTTP: 304 Not Modified
-Resposta JSON observada: status success e informacoes do desafio Score Board
-Dados Pessoais ou privados:nao identificamos na resposta observada
+- **Sistema de análise:** Kali Linux
+- **Aplicação-alvo:** OWASP Juice Shop
+- **Endereço local:** `http://192.168.115.5:3000`
+- **Ferramentas:** Firefox Developer Tools (Network) e curl
 
-5.Analise 
-O cabecalho Access-Control-Allow-Origin:* permite que navegadores autorizem paginas de diferentes origens a ler respostas nao credenciadas, conforme as regras de CORS.
+## 3. Endpoint analisado
 
-O conteudo observado parece relacionado a informacoes de um desafio da aplicacao.A presenca do curinga, isoladamente, nao comprova uma vulnerabilidade. O cabecalho Vary: Accept-Encoding esta relacionado a negociacao de codificacao da resposta e nao demonstra, por si s[o, uma falha de CORS
+- **Método HTTP:** GET
+- **Caminho:** `/api/Challenges/?name=Score`
+- **Recurso observado:** informações relacionadas ao desafio Score Board
 
-6.Conclusao provisoria
-Nao foi confirmada uma vulnerabilidade de CORS nesta etapa.A analise limitou-se a observacao dos cabecalhos e do conteudo disponibilizado pelo endpoint no laboratorio local.Seriam necessarias evidencias adicionais de impacto para classificar o comportamento como vulnerabilidade.
+## 4. Evidências observadas na resposta GET
 
-7.Escopo e seguranca
-Testes realizados exclusivamente no laboratorio local autorizado.Nenhum dado de terceiros foi acessado.
+- **Status HTTP:** `304 Not Modified`
+- **`Access-Control-Allow-Origin`:** `*`
+- **`Access-Control-Allow-Credentials`:** não identificado na resposta examinada
+- **`Vary`:** `Accept-Encoding`
+- **Conteúdo observado:** resposta relacionada ao desafio Score Board
+- **Dados pessoais ou privados:** não foram identificados no conteúdo observado
 
-8.Teste de requisicao OPTIONS
-Endpoint:/api/Challenges/?name=Score
-Metodo HTTP:OPTIONS
-Resultado Observado:
-Status:204 No Content
-Access-Control-Allow-Origin: *
-Access-Control-Resquest-Headers
-Content-Length:0
+## 5. Análise da resposta GET
 
-Analise Defensiva:
-O servidor respondeu a requisicao OPTIONS com status 204 e declarou os metodos lsitados no cabecalho Access-Control-Allow-Methods.Essa resposta, isoladamente,nao demonstra que todos esses metodos funcionem no endpoint nem que as operacoes estejam disponiveis sem autenticacao ou autorizacao.
-O cabecalho Access-COntrol-Allow-Origin com valor * merece ser interpretado considerando a finalidade do recurso e os dados retornados.Nao doi confirmada vulnerabilidade apenas com esses teste.
-Limitacao: nao foram testadas operacoes de alteracao ou exclusao de dados. A analise permaneceu observacional e restrita ao laboratorio local.
+O cabeçalho `Access-Control-Allow-Origin: *` permite que navegadores autorizem páginas de diferentes origens a ler determinadas respostas, respeitando as regras de CORS. Essa configuração não permite, por si só, que uma página leia respostas que exijam credenciais com cookies quando a resposta não autoriza credenciais por CORS.
 
-9.Verificacao de Access-Control-Allow-Credentials
-Foi realizada uma consulta a resposta OPTIONS  do endpoint /api/challenges/?name=Score.
-Resultado: o cabecalho Access-Control-Allow-Credentials nao foi encontrado nessa resposta.
-Interpretacao: essa observacao se aplica somente a resposta analisada. A ausencia do cabecalho nao comprova, isoladamente, que todas as respostas da aplicacao tenham a mesma configuracao ou que nao existam outros riscos.
-Conclusao da verificacao: ate o momento nao foi confirmada uma vulnerabilidade de CORS.Os resultados documentados sao observacoes tecnicas do laboratorio local.
+O conteúdo observado estava relacionado a informações do desafio Score Board. A presença do curinga `*`, isoladamente, não comprova uma vulnerabilidade. O cabeçalho `Vary: Accept-Encoding` está relacionado à negociação da codificação da resposta e não demonstra, por si só, uma falha de CORS.
+
+O status `304 Not Modified` indica que o recurso não precisou ser retransmitido devido à validação de cache. A análise do conteúdo deve considerar também as respostas e os cabeçalhos efetivamente observados nas ferramentas utilizadas.
+
+## 6. Teste da requisição OPTIONS
+
+- **Endpoint:** `/api/Challenges/?name=Score`
+- **Método HTTP:** `OPTIONS`
+- **Status observado:** `204 No Content`
+- **`Access-Control-Allow-Origin`:** `*`
+- **`Access-Control-Allow-Methods`:** métodos anunciados pela resposta, incluindo `GET`, `HEAD`, `PUT`, `PATCH`, `POST` e `DELETE`
+- **`Content-Length`:** `0`
+- **`Access-Control-Allow-Credentials`:** não identificado na resposta examinada
+
+### Análise da resposta OPTIONS
+
+A resposta `204 No Content` indica que o servidor respondeu à requisição sem conteúdo no corpo. A lista de métodos anunciados em `Access-Control-Allow-Methods` não comprova, isoladamente, que todos esses métodos funcionem no endpoint nem que operações estejam disponíveis sem autenticação ou autorização.
+
+A configuração `Access-Control-Allow-Origin: *` deve ser avaliada considerando a finalidade do recurso, a sensibilidade dos dados e os controles de acesso aplicáveis.
+
+Não foram testadas operações de alteração ou exclusão de dados nesta análise.
+
+## 7. Verificação de Access-Control-Allow-Credentials
+
+Foi examinada a resposta OPTIONS do endpoint `/api/Challenges/?name=Score`.
+
+**Resultado:** o cabeçalho `Access-Control-Allow-Credentials` não foi encontrado na resposta examinada.
+
+Essa observação se limita à resposta analisada. A ausência do cabeçalho nessa resposta não comprova que todas as respostas da aplicação tenham a mesma configuração nem que não existam outros riscos.
+
+## 8. Conclusão
+
+Até o momento, não foi confirmada uma vulnerabilidade de CORS com base nas evidências coletadas. A análise foi observacional e limitada aos cabeçalhos e ao conteúdo disponibilizado pelo endpoint no laboratório local.
+
+Uma avaliação adicional exigiria evidências que demonstrassem impacto real, considerando as origens envolvidas, a natureza dos dados, o uso de credenciais e os controles de autenticação e autorização.
+
+## 9. Escopo e uso responsável
+
+Todos os testes foram realizados exclusivamente no laboratório local autorizado. A análise não teve como objetivo acessar dados de terceiros nem alterar ou excluir dados da aplicação.
