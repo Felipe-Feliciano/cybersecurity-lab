@@ -44,3 +44,33 @@ O achado deve ser tratado como uma observação de segurança que requer investi
 ## 7. Escopo
 
 Todos os testes foram realizados na aplicação local do laboratório OWASP Juice Shop, em ambiente controlado e autorizado.
+
+## 8. Teste complementar: rota inexistente
+
+### Procedimento
+
+Foi realizada uma solicitação HTTP GET para uma rota inexistente do laboratório:
+
+`/rota-inexistente-lab`
+
+### Resultado observado
+
+- Status HTTP: `200 OK`
+- Tipo de conteúdo: `text/html; charset=UTF-8`
+- Conteúdo: página HTML principal do OWASP Juice Shop.
+
+### Análise
+
+A resposta é compatível com um mecanismo de fallback de uma aplicação de página única (SPA), que entrega o frontend para rotas desconhecidas.
+
+O resultado não comprova, isoladamente, uma vulnerabilidade. Para determinar se existe um problema de configuração, seria necessário diferenciar as rotas do frontend dos endpoints da API.
+
+### Comparação com o teste TRACE
+
+Diferentemente da rota inexistente, a solicitação TRACE retornou `500 Internal Server Error` e uma página contendo detalhes internos da aplicação, incluindo caminhos de arquivos e stack trace.
+
+A exposição desses detalhes na resposta TRACE merece investigação adicional. O teste não confirmou reflexão da solicitação nem uma vulnerabilidade explorável.
+
+### Conclusão complementar
+
+Os testes apresentaram comportamentos diferentes: a rota inexistente retornou a página do frontend, enquanto TRACE provocou um erro interno com detalhes técnicos. Os resultados foram registrados separadamente para evitar conclusões sem evidências suficientes.
