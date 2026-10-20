@@ -66,8 +66,23 @@ Foi enviada uma solicitação utilizando o método `TRACE`.
 - O corpo retornado continha HTML da página principal.
 - O marcador de teste `X-Lab-Test: trace-check` não foi encontrado no corpo examinado.
 
-**Conclusão:** o teste não confirmou reflexão do cabeçalho por meio de TRACE. O status `200 OK`, isoladamente, também não comprova que o método foi executado com o comportamento esperado.
 
+**Conclusão:** o teste não confirmou reflexão do cabeçalho por meio de TRACE. O status `200 OK`, isoladamente, também não comprova que o método foi executado com o comportamento esperado.
+### Teste complementar no endpoint da API
+
+Em um teste separado, foi enviada uma solicitação TRACE para `/rest/products/search?q=apple`.
+
+- **Status HTTP observado:** `500 Internal Server Error`.
+- A resposta apresentou uma mensagem de erro e detalhes internos, incluindo caminhos de arquivos e stack trace.
+- Não foi observada reflexão da solicitação HTTP na resposta.
+
+**Conclusão:** a exposição de detalhes internos merece investigação e correção do tratamento de erros. O resultado não confirma, isoladamente, uma vulnerabilidade explorável.
+
+### Teste complementar: rota inexistente
+
+Uma solicitação GET para `/rota-inexistente-lab` retornou `200 OK` e a página HTML principal do OWASP Juice Shop.
+
+Esse comportamento é compatível com o fallback do frontend de uma aplicação SPA e não comprova, por si só, uma vulnerabilidade.
 ## Competências praticadas
 
 - Reconhecimento básico de serviços com Nmap.
