@@ -83,6 +83,8 @@ Foi enviada uma solicitação utilizando o método `TRACE`.
 - `02-reconhecimento/` — evidência do reconhecimento de serviços.
 - `03-analise-cors.md` — relatório de análise de CORS.
 - `04-analise-cabecalhos.md` — relatório de cabeçalhos HTTP e método TRACE.
+- `06-analise-trace.md` — análise do método TRACE e teste complementar de rota inexistente.
+- `05-evidencias/` — arquivos de evidência dos testes realizados.
 - `README.md` — apresentação e documentação geral do projeto.
 - `.gitignore` — regras para excluir arquivos locais e temporários do versionamento.
 
