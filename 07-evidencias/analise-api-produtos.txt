@@ -1,0 +1,58 @@
+ANÁLISE DA API DE PRODUTOS — OWASP JUICE SHOP
+=============================================
+
+1. AMBIENTE
+Cliente: Kali Linux
+Aplicação: OWASP Juice Shop
+Alvo: 192.168.115.5:3000
+Ferramenta: curl
+Tipo de teste: GET — consulta de produtos
+
+2. TESTE 1 — BUSCA COM RESULTADOS
+Endpoint: /rest/products/search?q=apple
+Método HTTP: GET
+Status HTTP: 200 OK
+Content-Type: application/json
+Resultado: 3 produtos retornados.
+
+Observação:
+A resposta apresentou informações de produtos, incluindo nomes,
+descrições, preços e imagens.
+
+3. TESTE 2 — BUSCA SEM RESULTADOS
+Endpoint: /rest/products/search?q=produto_inexistente_xyz
+Método HTTP: GET
+Status HTTP: 200 OK
+Resultado JSON: {"status":"success","data":[]}
+
+Observação:
+A aplicação retornou uma lista vazia quando nenhum produto
+correspondia ao termo pesquisado.
+
+4. ANÁLISE DE SEGURANÇA
+As duas consultas foram processadas normalmente.
+Os resultados observados não demonstram, isoladamente,
+uma vulnerabilidade de segurança.
+
+O cabeçalho Access-Control-Allow-Origin: * foi observado
+nas respostas. É necessário avaliar o contexto e os dados
+acessíveis antes de concluir se existe algum risco de CORS.
+
+5. RECOMENDAÇÕES
+- Verificar se endpoints com dados privados exigem autenticação.
+- Confirmar que cada usuário só acessa os dados autorizados.
+- Avaliar as configurações de CORS conforme as necessidades
+  reais da aplicação.
+- Evitar conclusões de vulnerabilidade baseadas em um único
+  cabeçalho HTTP.
+
+6. CONCLUSÃO
+A API retornou três produtos para a busca "apple" e uma lista
+vazia para uma pesquisa sem correspondências. Ambos os testes
+retornaram HTTP 200 OK.
+
+Até o momento, esses resultados representam comportamento
+normal da consulta de produtos, sem comprovação de falha
+de segurança.
+
+Laboratório local autorizado — finalidade educacional.
