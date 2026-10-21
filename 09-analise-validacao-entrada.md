@@ -56,3 +56,29 @@ A entrada testada provocou uma resposta HTTP 500 com a mensagem `SQLITE_ERROR: i
 O resultado indica um erro de processamento e exposição de detalhes técnicos. Não foi comprovada, com este teste isolado, uma SQL injection explorável.
 
 Teste realizado em laboratório local para fins educacionais.
+
+## 8. Testes complementares de pesquisa
+
+### Busca por `juice`
+
+- Método: GET
+- Endpoint: `/rest/products/search?q=juice`
+- Resultado: `200 OK`
+- Resposta: lista de produtos relacionados ao termo pesquisado.
+- Evidência: `07-evidencias/busca-juice.txt`
+
+### Busca por valor numérico
+
+- Método: GET
+- Parâmetro: `q=12345`
+- Resultado: `200 OK`
+- Resposta: lista vazia (`data: []`).
+
+### Busca sem correspondências
+
+- Método: GET
+- Parâmetro: `q=produto_inexistente_xyz`
+- Resultado: `200 OK`
+- Resposta: lista vazia (`data: []`).
+
+Esses resultados são compatíveis com o comportamento normal da pesquisa. O teste com entrada especial que retornou erro SQLite continua sendo o principal ponto que merece investigação adicional.
