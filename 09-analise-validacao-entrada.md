@@ -82,3 +82,43 @@ Teste realizado em laboratório local para fins educacionais.
 - Resposta: lista vazia (`data: []`).
 
 Esses resultados são compatíveis com o comportamento normal da pesquisa. O teste com entrada especial que retornou erro SQLite continua sendo o principal ponto que merece investigação adicional.
+
+## 9. Análise de tratamento de rotas inexistentes
+
+### Objetivo
+
+Verificar como a aplicação responde a uma requisição para uma rota de API inexistente e identificar possíveis exposições de informações técnicas.
+
+### Teste realizado
+
+- Método HTTP: GET
+- Caminho solicitado: `/api/rota-inexistente-lab`
+- Ambiente: Kali Linux e OWASP Juice Shop local
+- Resultado: `500 Internal Server Error`
+- Mensagem: `Unexpected path: /api/rota-inexistente-lab`
+- Tecnologia identificada: Express 4.22.1
+- Evidência: `07-evidencias/erro-rota-inexistente.txt`
+
+### Análise técnica
+
+A aplicação retornou um erro HTTP 500 para uma rota inexistente. A resposta incluiu um stack trace com caminhos internos de arquivos e informações sobre componentes da aplicação.
+
+Esse comportamento expõe detalhes da implementação que, em um ambiente de produção, deveriam ser ocultados dos clientes.
+
+### Impacto potencial
+
+A exposição de informações técnicas pode facilitar o reconhecimento da arquitetura interna e auxiliar a investigação de outras falhas. O teste, isoladamente, não demonstra acesso não autorizado nem comprometimento de dados.
+
+### Recomendações defensivas
+
+- Configurar um tratamento centralizado de erros.
+- Retornar mensagens genéricas para clientes em ambientes de produção.
+- Desabilitar a exposição de stack traces nas respostas HTTP.
+- Registrar detalhes técnicos somente em logs internos com acesso restrito.
+- Retornar `404 Not Found` para rotas inexistentes, quando apropriado à arquitetura da aplicação.
+
+### Conclusão
+
+O teste identificou uma resposta HTTP 500 contendo informações sobre o Express, caminhos internos e stack trace. O resultado caracteriza exposição de informações técnicas no contexto do laboratório e reforça a importância de um tratamento adequado de erros.
+
+O achado foi observado em um ambiente educacional local e não deve ser generalizado para outras aplicações sem testes adicionais.
